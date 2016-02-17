@@ -5,5 +5,6 @@
 // });
 
 Route::group(['prefix' => 'api/v1'], function() {
-  Route::resource('documents', 'DocumentsController');
+    Route::resource('documents', 'DocumentsController');
 });
+
