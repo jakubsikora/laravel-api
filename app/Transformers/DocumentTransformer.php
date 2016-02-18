@@ -1,6 +1,6 @@
 <?php
 
-namespace Transformers;
+namespace App\Transformers;
 
 class DocumentTransformer extends Transformer {
 

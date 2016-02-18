@@ -1,6 +1,6 @@
 <?php
 
-namespace Transformers;
+namespace App\Transformers;
 
 abstract class Transformer {
     /**
