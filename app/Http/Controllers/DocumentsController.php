@@ -6,14 +6,26 @@ use App\Document;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Response;
+use App\CertifiedTranslation\Transformers\DocumentTransformer;
 
 class DocumentsController extends Controller
 {
+    /**
+     * @var \CertifiedTranslation\Transformers\DocumentTransformer
+     */
+    protected $documentTransformer;
+
+    function __construct(DocumentTransformer $documentTransformer)
+    {
+        $this->documentTransformer = $documentTransformer;
+    }
+
     public function index()
     {
         $documents = Document::all();
+
         return Response::json([
-            'data' => $documents->toArray()
+            'data' => $this->documentTransformer->transformCollection($documents->all())
         ], 200);
     }
 
@@ -21,8 +33,7 @@ class DocumentsController extends Controller
     {
         $document = Document::find($id);
 
-        if (! $document)
-        {
+        if (! $document) {
             return Response::json([
                 'error' => [
                     'message' => 'Document does not exist'
@@ -31,7 +42,7 @@ class DocumentsController extends Controller
         }
 
         return Response::json([
-            'data' => $document->toArray()
+            'data' => $this->documentTransformer->transform($document)
         ], 200);
     }
 }
