@@ -1,10 +1,8 @@
 <?php
 
-namespace CertifiedTranslation\Transformers;
+namespace Transformers;
 
-use App\CertifiedTranslation\Transformers\Transformer;
-
-class DocumentTransform extends Transformer {
+class DocumentTransformer extends Transformer {
 
     /**
      * Transform a document

@@ -1,6 +1,6 @@
 <?php
 
-namespace CertifiedTranslation\Transformers;
+namespace Transformers;
 
 abstract class Transformer {
     /**

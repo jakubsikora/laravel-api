@@ -6,12 +6,12 @@ use App\Document;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Response;
-use App\CertifiedTranslation\Transformers\DocumentTransformer;
+use App\Transformers\DocumentTransformer;
 
 class DocumentsController extends Controller
 {
     /**
-     * @var \CertifiedTranslation\Transformers\DocumentTransformer
+     * @var \Transformers\DocumentTransformer
      */
     protected $documentTransformer;
 
