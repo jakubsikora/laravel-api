@@ -3,46 +3,56 @@
 namespace App\Http\Controllers;
 
 use App\Document;
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Response;
 use App\Transformers\DocumentTransformer;
+use App\Http\Controllers\ApiController;
 
-class DocumentsController extends Controller
+class DocumentsController extends ApiController
 {
     /**
      * @var \Transformers\DocumentTransformer
      */
     protected $documentTransformer;
 
-    function __construct(DocumentTransformer $documentTransformer)
+    public function __construct(DocumentTransformer $documentTransformer)
     {
         $this->documentTransformer = $documentTransformer;
     }
 
+    /**
+     * [index description]
+     * @return [type] [description]
+     */
     public function index()
     {
         $documents = Document::all();
 
-        return Response::json([
+        return $this->respond([
             'data' => $this->documentTransformer->transformCollection($documents->all())
-        ], 200);
+        ]);
     }
 
+    /**
+     * [show description]
+     * @param  [type] $id [description]
+     * @return [type]     [description]
+     */
     public function show($id)
     {
         $document = Document::find($id);
 
         if (! $document) {
-            return Response::json([
-                'error' => [
-                    'message' => 'Document does not exist'
-                ]
-            ], 404);
+            return $this->respondNotFound('Document does not exist');
         }
 
-        return Response::json([
+        return $this->respond([
             'data' => $this->documentTransformer->transform($document)
-        ], 200);
+        ]);
+    }
+
+    public function store()
+    {
+        dd('store');
     }
 }

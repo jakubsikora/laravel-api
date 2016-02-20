@@ -3,6 +3,7 @@
 namespace App\Transformers;
 
 abstract class Transformer {
+
     /**
      * Transform items
      *
