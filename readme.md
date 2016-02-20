@@ -2,4 +2,7 @@
 
 ### Resources TODO:
 #### document
+- id
+- name
+- type
 #### language
