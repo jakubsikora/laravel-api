@@ -1,9 +1,42 @@
-## Lavel API
+## Laravel API
 
 ### Resources TODO:
-#### document
+#### documents
 - id
 - name
 - type
 
-#### language
+#### languages_from
+- id
+- language
+- class
+- exclude_cash
+- disabled
+
+#### languages_to
+- id
+- language
+- class
+- exclude_cash
+- disabled
+
+#### certifications
+- id
+- certification
+
+#### legalisations
+- id
+- legalisation
+
+#### deliveries
+- id
+- delivery
+- price_pence
+- days
+- nationality
+- short_delivery
+- code
+
+#### countries
+- id
+- country
