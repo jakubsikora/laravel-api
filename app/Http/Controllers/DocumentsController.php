@@ -18,6 +18,7 @@ class DocumentsController extends ApiController
     public function __construct(DocumentTransformer $documentTransformer)
     {
         $this->documentTransformer = $documentTransformer;
+        $this->middleware('jwt.auth', ['except' => ['index']]);
     }
 
     /**

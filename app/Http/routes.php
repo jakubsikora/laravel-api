@@ -6,5 +6,8 @@
 
 Route::group(['prefix' => 'api/v1'], function() {
     Route::resource('documents', 'DocumentsController');
+
+    Route::resource('authenticate', 'AuthenticateController', ['only' => ['index']]);
+    Route::post('authenticate', 'AuthenticateController@authenticate');
 });
 
