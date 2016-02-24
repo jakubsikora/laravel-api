@@ -1,10 +1,10 @@
 <?php
 
-// Route::get('/', function () {
-//   return view('welcome');
-// });
-
 Route::group(['prefix' => 'api/v1'], function() {
-    Route::resource('documents', 'DocumentsController');
+    Route::post('authenticate', 'AuthController@authenticate');
+
+    Route::group(['middleware' => ['jwt.auth', 'jwt.refresh']], function() {
+        Route::resource('documents', 'DocumentsController');
+    });
 });
 

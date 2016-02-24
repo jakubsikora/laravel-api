@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Seeder;
 use App\Document;
+use App\User;
 
 class DatabaseSeeder extends Seeder
 {
@@ -13,6 +14,9 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         Document::truncate();
-        $this->call(DocumentTableSeeder::class);
+        User::truncate();
+
+        factory(User::class, 50)->create();
+        factory(Document::class, 30)->create();
     }
 }

@@ -33,6 +33,16 @@ class ApiController extends Controller {
     }
 
     /**
+     * [respondUnauthorized description]
+     * @param  string $message [description]
+     * @return [type]          [description]
+     */
+    public function respondUnauthorized($message = 'Unauthorized!')
+    {
+        return $this->setStatusCode(401)->respondWithError($message);
+    }
+
+    /**
      * [respondNotFound description]
      * @param  string $message [description]
      * @return [type]          [description]
