@@ -15,7 +15,8 @@ class DatabaseSeeder extends Seeder
     {
         Document::truncate();
         User::truncate();
-        $this->call(DocumentTableSeeder::class);
-        $this->call(UserTableSeeder::class);
+
+        factory(User::class, 50)->create();
+        factory(Document::class, 30)->create();
     }
 }
