@@ -3,7 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\Response as IlluminateResponse;
+use Symfony\Component\HttpFoundation\Response;
 
 class ApiController extends Controller {
 
@@ -11,7 +12,7 @@ class ApiController extends Controller {
      * [$statusCode description]
      * @var [type]
      */
-    protected $statusCode = 200;
+    protected $statusCode = Response::HTTP_OK;
 
     /**
      * [getStatusCode description]
@@ -39,7 +40,8 @@ class ApiController extends Controller {
      */
     public function respondUnauthorized($message = 'Unauthorized!')
     {
-        return $this->setStatusCode(401)->respondWithError($message);
+        return $this->setStatusCode(Response::HTTP_UNAUTHORIZED)
+                    ->respondWithError($message);
     }
 
     /**
@@ -49,7 +51,19 @@ class ApiController extends Controller {
      */
     public function respondNotFound($message = 'Not Found!')
     {
-        return $this->setStatusCode(404)->respondWithError($message);
+        return $this->setStatusCode(Response::HTTP_NOT_FOUND)
+                    ->respondWithError($message);
+    }
+
+    /**
+     * [respondUnprocessableEntity description]
+     * @param  string $message [description]
+     * @return [type]          [description]
+     */
+    public function respondUnprocessableEntity($message = 'UnprocessableEntity!')
+    {
+        return $this->setStatusCode(Response::HTTP_UNPROCESSABLE_ENTITY)
+                    ->respondWithError($message);
     }
 
     /**
@@ -59,7 +73,19 @@ class ApiController extends Controller {
      */
     public function respondInternalError($message = 'Internal Error!')
     {
-        return $this->setStatusCode(500)->respondWithError($message);
+        return $this->setStatusCode(Response::HTTP_INTERNAL_SERVER_ERROR)
+                    ->respondWithError($message);
+    }
+
+    /**
+     * [respondCreated description]
+     * @param  string $message [description]
+     * @return [type]          [description]
+     */
+    public function respondCreated($message)
+    {
+        return $this->setStatusCode(Response::HTTP_CREATED)
+                    ->respond(['message' => $message]);
     }
 
     /**
@@ -70,9 +96,14 @@ class ApiController extends Controller {
      */
     public function respond($data, $headers = [])
     {
-        return Response::json($data, $this->getStatusCode(), $headers);
+        return IlluminateResponse::json($data, $this->getStatusCode(), $headers);
     }
 
+    /**
+     * [respondWithError description]
+     * @param  [type] $message [description]
+     * @return [type]          [description]
+     */
     public function respondWithError($message)
     {
         return $this->respond([

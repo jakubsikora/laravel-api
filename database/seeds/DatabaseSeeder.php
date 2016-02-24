@@ -6,6 +6,11 @@ use App\User;
 
 class DatabaseSeeder extends Seeder
 {
+    private $tables = [
+        'users',
+        'documents'
+    ];
+
     /**
      * Run the database seeds.
      *
@@ -13,10 +18,20 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        Document::truncate();
-        User::truncate();
+        $this->cleanDatabase();
 
         factory(User::class, 50)->create();
         factory(Document::class, 30)->create();
+    }
+
+    /**
+     * [cleanDatabase description]
+     * @return [type] [description]
+     */
+    private function cleanDatabase()
+    {
+        foreach ($this->tables as $tableName) {
+            DB::table($tableName)->truncate();
+        }
     }
 }
