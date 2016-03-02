@@ -40,10 +40,10 @@ class AuthController extends ApiController
      * [refresh description]
      * @return [type] [description]
      */
-    public function refresh()
+    public function refresh(Request $request)
     {
-        $current_token = JWTAuth::getToken();
-        $token = JWTAuth::refresh($current_token);
+        $current_token = $request->only('token');
+        $token = JWTAuth::refresh($current_token['token']);
 
         return response()->json(compact('token'));
     }
