@@ -10,7 +10,7 @@ class DocumentsTest extends ApiTester
     /** @test */
     public function it_fetches_documents()
     {
-        $this->makeDocument();
+        factory(Document::class, 3)->create();
 
         $this->getJson('api/v1/documents');
 
@@ -20,7 +20,7 @@ class DocumentsTest extends ApiTester
     /** @test */
     public function it_fetches_single_document()
     {
-        $this->makeDocument();
+        factory(Document::class)->create();
 
         $document = $this->getJson('api/v1/documents/1')->data;
 
@@ -31,18 +31,25 @@ class DocumentsTest extends ApiTester
     /** @test */
     public function it_404s_if_a_document_is_not_found()
     {
-        $this->getJson('api/v1/documents/x');
+        $json = $this->getJson('api/v1/documents/x');
 
         $this->assertResponseStatus(404);
+        $this->assertObjectHasAttributes($json, 'error');
     }
 
-    private function makeDocument($documentFields = [])
+    /** @test */
+    public function it_creates_a_new_document_given_valid_parameters()
     {
-        $document = array_merge([
-            'name' => $this->fake->word(),
-            'type' => $this->fake->randomElement($array = array ('A','B','C')),
-        ], $documentFields);
+        $this->getJson('api/v1/documents', 'POST', factory(Document::class, 1)->make()->toArray());
 
-        while($this->times--) Document::create($document);
+        $this->assertResponseStatus(201);
+    }
+
+    /** @test */
+    public function it_throws_a_422_if_a_new_lesson_request_fails_validation()
+    {
+        $this->getJson('api/v1/documents', 'POST');
+
+        $this->assertResponseStatus(422);
     }
 }

@@ -4,37 +4,43 @@ use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Faker\Factory as Faker;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 
-class ApiTester extends TestCase
+abstract class ApiTester extends TestCase
 {
     use WithoutMiddleware;
     use DatabaseMigrations;
 
     protected $fake;
 
-    protected $times = 1;
-
     function __construct()
     {
         $this->fake = Faker::create();
     }
 
+    /**
+     * [setUp description]
+     */
     public function setUp()
     {
         parent::setUp();
     }
 
-    protected function times($count)
+    /**
+     * [getJson description]
+     * @param  [type] $uri [description]
+     * @return [type]      [description]
+     */
+    protected function getJson($uri, $method = 'GET', $parameters = [])
     {
-        $this->times = $count;
-
-        return $this;
+        return json_decode(
+            $this->call($method, $uri, $parameters)
+                 ->getContent()
+        );
     }
 
-    protected function getJson($uri)
-    {
-        return json_decode($this->call('GET', $uri)->getContent());
-    }
-
+    /**
+     * [assertObjectHasAttributes description]
+     * @return [type] [description]
+     */
     protected function assertObjectHasAttributes()
     {
         $args = func_get_args();
@@ -45,4 +51,6 @@ class ApiTester extends TestCase
             $this->assertObjectHasAttribute($attribute, $object);
         }
     }
+
+
 }
