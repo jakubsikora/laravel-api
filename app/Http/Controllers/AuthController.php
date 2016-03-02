@@ -35,4 +35,16 @@ class AuthController extends ApiController
         // if no errors are encountered we can return a JWT
         return $this->respond(compact('token'));
     }
+
+    /**
+     * [refresh description]
+     * @return [type] [description]
+     */
+    public function refresh()
+    {
+        $current_token = JWTAuth::getToken();
+        $token = JWTAuth::refresh($current_token);
+
+        return response()->json(compact('token'));
+    }
 }
