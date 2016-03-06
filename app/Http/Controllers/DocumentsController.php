@@ -3,11 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Document;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Response;
-use App\Transformers\DocumentTransformer;
 use App\Http\Controllers\ApiController;
+use App\Http\Requests\StoreDocumentRequest;
+use App\Transformers\DocumentTransformer;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Response;
+use Validator;
 
 class DocumentsController extends ApiController
 {
@@ -27,12 +29,13 @@ class DocumentsController extends ApiController
      */
     public function index()
     {
-        $documents = Document::all();
+        $limit = Input::get('limit') ?: 3;
+        $documents = Document::paginate($limit);
 
-        return $this->respond([
-            'data' => $this->documentTransformer
-                           ->transformCollection($documents->all())
-        ]);
+        return $this->respondWithPagination($documents,
+            $this->documentTransformer
+                 ->transformCollection($documents->all())
+        );
     }
 
     /**
@@ -48,23 +51,25 @@ class DocumentsController extends ApiController
             return $this->respondNotFound('Document does not exist');
         }
 
-        return $this->respond([
-            'data' => $this->documentTransformer
-                           ->transform($document)
-        ]);
+        return $this->respond(
+            $this->documentTransformer
+                 ->transform($document)
+        );
     }
 
     /**
      * [store description]
      * @return [type] [description]
      */
-    public function store()
+    public function store(StoreDocumentRequest $request)
     {
-        if (! Input::get('name') or ! Input::get('type')) {
-            return $this->respondUnprocessableEntity('Parameters failed validation for a document');
-        }
+        // if ($validator->fails()) {
+        //     $messages = $validator->errors();
 
-        Document::create(Input::all());
+        //     return $this->respondUnprocessableEntity($messages->all());
+        // }
+
+        // Document::create(Input::all());
         return $this->respondCreated('Document successfully created.');
     }
 }

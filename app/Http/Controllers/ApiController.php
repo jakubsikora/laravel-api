@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Pagination\LengthAwarePaginator as Paginator;
 use Illuminate\Support\Facades\Response as IlluminateResponse;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -86,6 +87,20 @@ class ApiController extends Controller {
     {
         return $this->setStatusCode(Response::HTTP_CREATED)
                     ->respond(['message' => $message]);
+    }
+
+    /**
+     * [respondWithPagination description]
+     * @param  Paginator $collection [description]
+     * @param  [type]    $data       [description]
+     * @return [type]                [description]
+     */
+    public function respondWithPagination(Paginator $collection, $data)
+    {
+        return $this->respond($data, [
+            'X-Total-Count' => $collection->total(),
+            'Links' => 'TODO'
+        ]);
     }
 
     /**
