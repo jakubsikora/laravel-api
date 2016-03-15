@@ -5,14 +5,16 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\User;
+use App\Http\ApiResponse;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use JWTAuth;
 use Tymon\JWTAuth\Exceptions\JWTException;
-use App\Http\Controllers\ApiController;
 
-class AuthController extends ApiController
+class AuthController extends Controller
 {
+    use ApiResponse;
+
     /**
      * [authenticate description]
      * @param  Request $request [description]
