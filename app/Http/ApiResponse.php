@@ -1,14 +1,13 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http;
 
-use App\Http\Controllers\Controller;
 use Illuminate\Pagination\LengthAwarePaginator as Paginator;
 use Illuminate\Support\Facades\Response as IlluminateResponse;
 use Symfony\Component\HttpFoundation\Response;
 
-class ApiController extends Controller {
-
+trait ApiResponse
+{
     /**
      * [$statusCode description]
      * @var [type]
@@ -83,10 +82,17 @@ class ApiController extends Controller {
      * @param  string $message [description]
      * @return [type]          [description]
      */
-    public function respondCreated($message)
+    public function respondCreated($message, $location)
     {
         return $this->setStatusCode(Response::HTTP_CREATED)
-                    ->respond(['message' => $message]);
+                    ->respond(['message' => $message],
+                        ['Location' => $location]);
+    }
+
+    public function respondNoContent()
+    {
+        return $this->setStatusCode(Response::HTTP_NO_CONTENT)
+                    ->respond();
     }
 
     /**
@@ -99,7 +105,7 @@ class ApiController extends Controller {
     {
         return $this->respond($data, [
             'X-Total-Count' => $collection->total(),
-            'Links' => 'TODO'
+            'Link' => $this->buildHeaderLinks($collection)
         ]);
     }
 
@@ -109,7 +115,7 @@ class ApiController extends Controller {
      * @param  array  $headers [description]
      * @return [type]          [description]
      */
-    public function respond($data, $headers = [])
+    public function respond($data = null, $headers = [])
     {
         return IlluminateResponse::json($data, $this->getStatusCode(), $headers);
     }
@@ -127,5 +133,40 @@ class ApiController extends Controller {
                 'status_code' => $this->getStatusCode()
             ]
         ]);
+    }
+
+    /**
+     * [buildHeaderLinks description]
+     * @param  Paginator $collection [description]
+     * @return [type]                [description]
+     */
+    private function buildHeaderLinks(Paginator $collection)
+    {
+        $links = array();
+
+        if ($collection->nextPageUrl()) {
+            $links[] = $this->buildHeaderLink('next', $collection->nextPageUrl(), $collection->perPage());
+        }
+
+        if ($collection->previousPageUrl()) {
+            $links[] = $this->buildHeaderLink('prev', $collection->previousPageUrl(), $collection->perPage());
+        }
+
+        $links[] = $this->buildHeaderLink('first', $collection->url(1), $collection->perPage());
+        $links[] = $this->buildHeaderLink('last', $collection->url($collection->lastPage()), $collection->perPage());
+
+        return join($links, ", ");
+    }
+
+    /**
+     * [buildHeaderLink description]
+     * @param  [type] $rel     [description]
+     * @param  [type] $link    [description]
+     * @param  [type] $perPage [description]
+     * @return [type]          [description]
+     */
+    private function buildHeaderLink($rel, $link, $perPage)
+    {
+        return '<'.$link.'&per_page='.$perPage.'>; rel="'.$rel.'"';
     }
 }

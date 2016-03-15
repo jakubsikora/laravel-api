@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 use App\Http\ApiResponse;
 use App\Http\Requests\Request;
 
-class StoreDocumentRequest extends Request
+class UpdateDocumentRequest extends Request
 {
     use ApiResponse;
 
@@ -26,8 +26,7 @@ class StoreDocumentRequest extends Request
     public function rules()
     {
         return [
-            'name' => 'required|unique:documents',
-            'type' => 'required',
+            'name' => 'unique:documents'
         ];
     }
 
